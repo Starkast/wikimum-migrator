@@ -13,7 +13,7 @@ migrate_page = proc do |page|
     comment:              page[:comment].force_encoding('UTF-8'),
     compiled_comment:     page[:compiled_comment].force_encoding('UTF-8'),
     description:          page[:description].force_encoding('UTF-8'),
-    compiled_description: page[:description].force_encoding('UTF-8'),
+    compiled_description: page[:compiled_description].force_encoding('UTF-8'),
     created_on:           page[:created_on],
     updated_on:           page[:updated_on],
     markup:               page[:markup],
