@@ -14,6 +14,9 @@ GEM
       slop (~> 3.4)
     ruby-progressbar (1.5.1)
     sequel (4.10.0)
+    sequel_pg (1.6.9)
+      pg (>= 0.8.0)
+      sequel (>= 3.39.0)
     slop (3.5.0)
 
 PLATFORMS
@@ -26,3 +29,4 @@ DEPENDENCIES
   pry
   ruby-progressbar
   sequel
+  sequel_pg
