@@ -7,7 +7,7 @@ NEW_DB = Sequel.connect(ENV.fetch('NEW_DB_URL'))
 def migrate_page(page)
   page = NEW_DB[:pages] << {
     title:                page[:title].force_encoding('UTF-8'),
-    slug:                 page[:shorthand_title].force_encoding('UTF-8'),
+    slug:                 page[:shorthand_title].force_encoding('UTF-8').downcase,
     title_char:           page[:title_char].force_encoding('UTF-8'),
     content:              page[:content].force_encoding('UTF-8'),
     compiled_content:     page[:compiled_content].force_encoding('UTF-8'),
@@ -28,7 +28,7 @@ def migrate_revision(revision)
     first
 
   new_page = NEW_DB[:pages].
-    where(slug: old_page[:shorthand_title].force_encoding('UTF-8')).
+    where(slug: old_page[:shorthand_title].force_encoding('UTF-8').downcase).
     first
 
   unless new_page
@@ -39,7 +39,7 @@ def migrate_revision(revision)
   NEW_DB[:revisions] << {
     page_id:              new_page[:id],
     title:                revision[:title].force_encoding('UTF-8'),
-    slug:                 revision[:shorthand_title].force_encoding('UTF-8'),
+    slug:                 revision[:shorthand_title].force_encoding('UTF-8').downcase,
     title_char:           revision[:title_char].force_encoding('UTF-8'),
     content:              revision[:content].force_encoding('UTF-8'),
     compiled_content:     revision[:compiled_content].force_encoding('UTF-8'),
