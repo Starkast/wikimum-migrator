@@ -75,6 +75,7 @@ NEW_DB.transaction do
     progress_bar.increment
     migrate_user(user)
   end
+  NEW_DB.execute("SELECT setval('users_id_seq', max(id)) FROM users")
 
   OLD_DB[:pages].each do |page|
     progress_bar.increment
