@@ -4,6 +4,16 @@ require 'ruby-progressbar'
 OLD_DB = Sequel.connect(ENV.fetch('OLD_DB_URL'), encoding: 'latin1')
 NEW_DB = Sequel.connect(ENV.fetch('NEW_DB_URL'))
 
+def migrate_user(user)
+  NEW_DB[:users] << {
+    id:         user[:id],
+    login:      user[:login],
+    email:      user[:email],
+    created_on: user[:created_on],
+    last_login: user[:last_login],
+  }
+end
+
 def migrate_page(page)
   page = NEW_DB[:pages] << {
     title:                page[:title].force_encoding('UTF-8'),
@@ -19,6 +29,7 @@ def migrate_page(page)
     updated_on:           page[:updated_on],
     markup:               page[:markup],
     revision:             page[:revision],
+    author_id:            page[:updated_by],
   }
 end
 
@@ -51,13 +62,19 @@ def migrate_revision(revision)
     updated_on:           revision[:updated_on],
     markup:               revision[:markup],
     revision:             revision[:revision],
+    author_id:            revision[:updated_by],
   }
 end
 
 NEW_DB.transaction do
-  count = OLD_DB[:pages].count + OLD_DB[:revisions].count
+  count = OLD_DB[:users].count + OLD_DB[:pages].count + OLD_DB[:revisions].count
 
   progress_bar = ProgressBar.create(total: count)
+
+  OLD_DB[:users].each do |user|
+    progress_bar.increment
+    migrate_user(user)
+  end
 
   OLD_DB[:pages].each do |page|
     progress_bar.increment
